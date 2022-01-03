@@ -17,7 +17,6 @@ import {
   IonGrid,
   IonLabel,
   IonCard,
-  IonListHeader,
   IonCardHeader,
   IonCardSubtitle,
   IonCardTitle,
@@ -35,13 +34,9 @@ import {
   Legend,
   Tooltip,
   ArcElement,
-  registerables
 } from 'chart.js';
 import faker from 'faker';
 import { chevronForward } from 'ionicons/icons';
-
-ChartJS.register(...registerables);
-
 
 ChartJS.register(
   ArcElement,
