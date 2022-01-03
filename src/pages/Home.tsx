@@ -1,4 +1,6 @@
 import MessageListItem from '../components/MessageListItem';
+import Loader from '../components/Loader';
+import Display from '../components/Display';
 import { useState, useEffect } from 'react';
 import { Message, getMessages } from '../data/messages';
 import {
@@ -22,6 +24,7 @@ import {
   IonCardSubtitle,
   IonCardTitle,
   IonIcon,
+  IonInput,
 } from '@ionic/react';
 import './Home.css';
 import { Doughnut , Chart} from 'react-chartjs-2';
@@ -38,7 +41,8 @@ import {
   registerables
 } from 'chart.js';
 import faker from 'faker';
-import { chevronForward } from 'ionicons/icons';
+import {  chevronForward } from 'ionicons/icons';
+import { setTimeout } from 'timers';
 
 ChartJS.register(...registerables);
 
@@ -150,15 +154,6 @@ const Home: React.FC = () => {
   // };
 
   
-  ChartJS.register(
-    LinearScale,
-    CategoryScale,
-    BarElement,
-    PointElement,
-    LineElement,
-    Legend,
-    Tooltip
-  );
   const smaple = {
     "word": "google.com",
     "messages": [
@@ -201,6 +196,8 @@ const Home: React.FC = () => {
 
     const onClick = async(e: any) => {
       try{
+        setIsLoading(true);
+        setTimeout(() => {setIsLoading(false);}, 3000);
         // const res= await fetch('url',{
         //   method: 'GET',
         // });
@@ -262,7 +259,9 @@ const Home: React.FC = () => {
         messages.length = smaple.messages.length;
         console.log(messages);
         setShowHelp(false);
+        setTimeout(() => {setFoundResults(true);}, 3000);
       }catch(e){
+        setFoundResults(false);
         console.error(e);
       }
     }
@@ -278,7 +277,8 @@ const Home: React.FC = () => {
   console.log(searchText);
   const [showDoughnut, setShowDoughnut] = useState(true);
   const [showBar, setShowBar] = useState(true);
-
+  const [isLoading, setIsLoading] = useState(false);
+  const [foundResults, setFoundResults] = useState(true);
   useEffect(() => {
     if(!showBar && !showDoughnut){
       setWidth(100);
@@ -289,46 +289,82 @@ const Home: React.FC = () => {
   return (
 
 
-    <IonPage id="home-page">
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Search-app</IonTitle>
-        </IonToolbar>
-      </IonHeader>
+    <IonPage id="home-page" className="bg-gradient-to-r from-cyan-500 to-blue-500">
       <IonContent fullscreen>
         <IonRefresher slot="fixed" onIonRefresh={refresh}>
           <IonRefresherContent></IonRefresherContent>
         </IonRefresher>
 
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">
-              Search-app
-            </IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <IonGrid fixed> 
-          <IonRow style={{height: 'fit-content'}}>
-            <IonCol size-xl="11" size-lg="11" size-md="10" size-sm="9" size-xs="9" >
+          <div className="min-h-screen bg-gradient-to-b from-cbl to-cp flex justify-center items-center p-4">
+            <div className="container rounded-lg pt-3 pb-14 pr-3 pl-3">
+              <form>
+                {(!foundResults || isLoading) && (<><h1 className="text-center font-bold text-white text-4xl">{isLoading?<p>Searching for <b className="text-cb">{searchText}</b></p>:'Search for a word'}</h1  >
+                  <p className="mx-auto font-normal text-center text-sm my-6 max-w-lg">This app will last 10 days count and last 100 messages.</p></>)}
+                  <div className="xs:flex items-center bg-cbgd rounded-lg overflow-hidden px-2 py-1 justify-between">
+                    <IonSearchbar className="xs-flex text-base text-gray-400 flex-grow outline-none px-2 " type="text" value={searchText} onIonChange={e => setSearchText(e.detail.value!)} animated placeholder="Add text to search"/>
+                    <div className="xs:flex items-center px-2 rounded-lg space-x-4 mx-auto ">
+                      <IonButton className=" text-white text-base rounded-lg font-thin" onClick={onClick} animate-bounce>Search</IonButton>
+                    </div>
+                  </div>
+              </form>
+              {isLoading && (<div className="pt-10 flex justify-center items-center">
+                <Loader></Loader>
+              </div>)}
+              {!isLoading && foundResults && width>1280 && (
+                <Display chartData={chartData} doughnutData={doughnutData} height={60} messages={messages}></Display>
+              )}
+              {!isLoading && foundResults && width<=1280 && width>1024 && (
+                <Display chartData={chartData} doughnutData={doughnutData} height={100} messages={messages}></Display>
+              
+              )}
+              {!isLoading && foundResults && width<=1024 && (
+                <Display chartData={chartData} doughnutData={doughnutData} height={120} messages={messages}></Display>
+              
+              )}
+            </div>
+          </div>
+
+
+          {/* <IonGrid>
+          <IonRow>
+            <IonCol size="8" className="h-30vh">
+              <IonRow>
+                <IonCol size="6">
+                  <IonButton color="primary" expand="block" onClick={ (e)=>setShowDoughnut(!showDoughnut) }>
+                    Toggle Chart 1&nbsp;<IonIcon icon={ chevronForward } />
+                  </IonButton>
+                </IonCol>
+                <IonCol size="6">
+                  <IonButton color="primary" expand="block" onClick={ (e)=>setShowBar(!showBar) }>
+                    Toggle Chart 2&nbsp;<IonIcon icon={ chevronForward } />
+                  </IonButton>
+                </IonCol>
+              </IonRow> 
+            </IonCol>
+            <IonCol size-xl="8" size-lg="7" size-md="6" size-sm="6" size-xs="12">
+              <IonContent>
+                
+              
+                {messages.map(m => <MessageListItem key={m.id} message={m} />)}
+              </IonContent>
+            </IonCol>
+            
+          </IonRow>
+        </IonGrid> */}
+
+
+
+
+
+            {/* <IonCol size-xl="11" size-lg="11" size-md="10" size-sm="9" size-xs="9" >
               <IonSearchbar value={searchText} onIonChange={e => setSearchText(e.detail.value!)} animated placeholder="Add text to search"></IonSearchbar>
             </IonCol>
             <IonCol size-xl="1"  size-lg="1" size-md="2"  size-sm="3" size-xs="3" className="ion-align-self-center" style={{height: 'fit-content'}}>
             <IonButton size="default" onClick={onClick}>  
               Submit
             </IonButton>
-            </IonCol>
+            </IonCol> */}
           
-          
-            </IonRow>
-            {showHelp&&(<IonRow className="ion-text-center ion-justify-content-center ion-margin-top">
-                <IonCol size="10">
-                    <IonLabel>
-                        <h2>Search for a word </h2>
-                        <p>This app will last 10 days count and last 100 messages.</p>
-                    </IonLabel>
-                </IonCol>
-            </IonRow>)} 
-            </IonGrid>
             {width>576 && !showHelp?(
             <IonGrid fixed style={{height: '100vh'}}>
               <IonRow>

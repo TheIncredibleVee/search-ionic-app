@@ -3,6 +3,7 @@ import {
   IonCardContent,
   IonCardTitle,
   IonCol,
+  IonItem,
   IonRow
   } from '@ionic/react';
 import { Message } from '../data/messages';
@@ -15,11 +16,9 @@ const MessageListItem: React.FC<MessageListItemProps> = ({ message }) => {
   return (
     <IonRow className={ `animate__animated animate__faster animate__slideInLeft` } >
           <IonCol size="12" >
-            <IonCard routerLink={`/message/${message.id}`}>
-              <IonCardContent>
+            <a href={`/message/${message.id}`}>
                 <IonCardTitle>{message.message.substring(0,100)}</IonCardTitle>
-              </IonCardContent>
-            </IonCard>
+            </a>
           </IonCol>
         </IonRow>
 

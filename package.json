@@ -10,6 +10,7 @@
     "@capacitor/ios": "3.3.3",
     "@capacitor/keyboard": "1.2.0",
     "@capacitor/status-bar": "1.0.6",
+    "@craco/craco": "^6.4.3",
     "@ionic/react": "^6.0.0",
     "@ionic/react-router": "^6.0.0",
     "@testing-library/jest-dom": "^5.11.9",
@@ -49,7 +50,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --transformIgnorePatterns 'node_modules/(?!(@ionic/react|@ionic/react-router|@ionic/core|@stencil/core|ionicons)/)'",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "ionic:build": "craco build",
+    "ionic:serve": "craco start"
   },
   "eslintConfig": {
     "extends": [
@@ -71,7 +74,10 @@
   },
   "devDependencies": {
     "@capacitor/cli": "3.3.3",
-    "@types/faker": "^5.5.9"
+    "@types/faker": "^5.5.9",
+    "autoprefixer": "^9.8.8",
+    "postcss": "^7.0.39",
+    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.17"
   },
   "description": "An Ionic project"
 }
