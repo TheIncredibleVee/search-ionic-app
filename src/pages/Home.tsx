@@ -269,7 +269,7 @@ const Home: React.FC = () => {
 
   const [total, setTtotal] = useState(0);
 
-  const[showHelp, setShowHelp] = useState(false);
+  const[showHelp, setShowHelp] = useState(true);
   const [width,setWidth]= useState(window.innerWidth);
   window.onresize = () => {
     setWidth(window.innerWidth);
@@ -339,14 +339,14 @@ const Home: React.FC = () => {
                         <Doughnut data={doughnutData} />
                     </IonCard>
                   )}
-                  {/* {
+                  {
                     showBar&&
                     (
                     <IonCard>
                       <Chart type='bar' data={chartData} />
                     </IonCard> 
                     )
-                  } */}
+                  }
                   <IonRow>
                     <IonCol size="6">
                       <IonButton color="primary" expand="block" onClick={ (e)=>setShowDoughnut(!showDoughnut) }>
@@ -380,13 +380,13 @@ const Home: React.FC = () => {
                         <Doughnut data={doughnutData} />
                     </IonCard>
                   )}
-                  {/* {
+                  {
                     showBar&&(
                     <IonCard>
                       <Chart type='bar' data={chartData} />
                     </IonCard> 
                     )
-                  } */}
+                  }
                   <IonRow>
                     <IonCol size="6">
                       <IonButton color="primary" expand="block" onClick={ (e)=>setShowDoughnut(!showDoughnut) }>
