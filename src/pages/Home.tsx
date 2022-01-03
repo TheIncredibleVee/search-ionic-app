@@ -34,10 +34,14 @@ import {
   LineElement,
   Legend,
   Tooltip,
-  ArcElement
+  ArcElement,
+  registerables
 } from 'chart.js';
 import faker from 'faker';
 import { chevronForward } from 'ionicons/icons';
+
+ChartJS.register(...registerables);
+
 
 ChartJS.register(
   ArcElement,
@@ -265,7 +269,7 @@ const Home: React.FC = () => {
 
   const [total, setTtotal] = useState(0);
 
-  const[showHelp, setShowHelp] = useState(true);
+  const[showHelp, setShowHelp] = useState(false);
   const [width,setWidth]= useState(window.innerWidth);
   window.onresize = () => {
     setWidth(window.innerWidth);
@@ -335,13 +339,14 @@ const Home: React.FC = () => {
                         <Doughnut data={doughnutData} />
                     </IonCard>
                   )}
-                  {
-                    showBar&&(
-                    // <IonCard>
-                    //   <Chart type='bar' data={chartData} />
-                    // </IonCard> 
+                  {/* {
+                    showBar&&
+                    (
+                    <IonCard>
+                      <Chart type='bar' data={chartData} />
+                    </IonCard> 
                     )
-                  }
+                  } */}
                   <IonRow>
                     <IonCol size="6">
                       <IonButton color="primary" expand="block" onClick={ (e)=>setShowDoughnut(!showDoughnut) }>
@@ -375,13 +380,13 @@ const Home: React.FC = () => {
                         <Doughnut data={doughnutData} />
                     </IonCard>
                   )}
-                  {
+                  {/* {
                     showBar&&(
-                    // <IonCard>
-                    //   <Chart type='bar' data={chartData} />
-                    // </IonCard> 
+                    <IonCard>
+                      <Chart type='bar' data={chartData} />
+                    </IonCard> 
                     )
-                  }
+                  } */}
                   <IonRow>
                     <IonCol size="6">
                       <IonButton color="primary" expand="block" onClick={ (e)=>setShowDoughnut(!showDoughnut) }>
