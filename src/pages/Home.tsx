@@ -337,9 +337,9 @@ const Home: React.FC = () => {
                   )}
                   {
                     showBar&&(
-                    <IonCard>
-                      <Chart type='bar' data={chartData} />
-                    </IonCard> 
+                    // <IonCard>
+                    //   <Chart type='bar' data={chartData} />
+                    // </IonCard> 
                     )
                   }
                   <IonRow>
@@ -377,9 +377,9 @@ const Home: React.FC = () => {
                   )}
                   {
                     showBar&&(
-                    <IonCard>
-                      <Chart type='bar' data={chartData} />
-                    </IonCard> 
+                    // <IonCard>
+                    //   <Chart type='bar' data={chartData} />
+                    // </IonCard> 
                     )
                   }
                   <IonRow>
