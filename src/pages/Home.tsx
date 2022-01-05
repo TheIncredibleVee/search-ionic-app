@@ -316,8 +316,8 @@ const Home: React.FC = () => {
                   <MobileDisplay chartData={chartData} doughnutData={doughnutData} position='right' height={250} total={total} totalCountHeight={30}></MobileDisplay>
                 )}
                 {!isLoading && !foundResults && error!==''  && (
-                  <div className="relative mt-6 bg-white p-6 rounded-xl">
-                      <p className="text-lg text-gray-600">{error}</p>
+                  <div className="relative mt-6 bg-red-100 p-6 rounded-xl">
+                      <p className="text-lg text-red-700 font-medium"><b>{error}</b></p>
                       <span className="absolute bg-red-500 w-8 h-8 flex items-center justify-center font-bold text-green-50 rounded-full -top-2 -left-2">!</span>
                       <div className="absolute top-0 right-0 flex space-x-2 p-4">
                       </div>
