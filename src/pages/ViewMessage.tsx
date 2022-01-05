@@ -1,29 +1,32 @@
-import { useState } from 'react';
-import { Message, getMessage } from '../data/messages';
+import { useState, useContext } from 'react';
+import { MessageContext } from '../context/context';
+import {Message} from '../data/messages';
 import {
   IonBackButton,
   IonButtons,
   IonContent,
   IonHeader,
-  IonIcon,
-  IonItem,
-  IonLabel,
-  IonNote,
   IonPage,
   IonToolbar,
   useIonViewWillEnter,
 } from '@ionic/react';
-import { personCircle } from 'ionicons/icons';
 import { useParams } from 'react-router';
 import './ViewMessage.css';
 
 function ViewMessage() {
+  const {messages, word} = useContext(MessageContext);
   const [message, setMessage] = useState<Message>();
+  const [msgArr, setMsgArr] =useState<string[]>();
   const params = useParams<{ id: string }>();
 
   useIonViewWillEnter(() => {
-    const msg = getMessage(parseInt(params.id, 10));
+    console.clear();
+    console.log(messages);
+    const msg = messages.find(m => m.id === parseInt(params.id));
     setMessage(msg);
+    setMsgArr(msg.message.split(word).filter(v=>v!==''));
+    console.log(msg);
+    console.log(msgArr);
   });
 
   return (
@@ -39,24 +42,13 @@ function ViewMessage() {
       <IonContent fullscreen>
         {message ? (
           <>
-            {/* <IonItem>
-              <IonIcon icon={personCircle} color="primary"></IonIcon>
-              <IonLabel className="ion-text-wrap">
-                <h2>
-                  {message.message}
-                  <span className="date">
-                    <IonNote>{Date()}</IonNote>
-                  </span>
-                </h2>
-                <h3>
-                  To: <IonNote>Me</IonNote>
-                </h3>
-              </IonLabel>
-            </IonItem> */}
 
             <div className="ion-padding">
               <h1>Message</h1>
-              <p>{message.message}
+              <p>{msgArr?.map( (w, idx) =>{
+                return <span key={idx}>{w}<b className="text-cb">{word}</b></span>
+                })
+              }
               </p>
             </div>
           </>

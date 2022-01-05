@@ -1,27 +1,44 @@
-import {
-  IonCard,
-  IonCardContent,
-  IonCardTitle,
-  IonCol,
-  IonItem,
-  IonRow
-  } from '@ionic/react';
+import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Message } from '../data/messages';
 
 interface MessageListItemProps {
+  idx:any,
   message: Message;
+  word: string,
 }
 
-const MessageListItem: React.FC<MessageListItemProps> = ({ message }) => {
+const MessageListItem: React.FC<MessageListItemProps> = ({ message, idx, word }) => {
+  useEffect(() => {
+    console.log(`MessageListItem ${JSON.stringify(message)} rendered`);
+  }, []);
+  let msg=message.message;
+  let msgArr=msg.toLowerCase().split(word);
+  let stringBefore;
+  let stringAfter;
+  stringBefore =msgArr.shift();
+  stringAfter =" "+msgArr?.join(word).substring(0,(100-stringBefore.length));
   return (
-    <IonRow className={ `animate__animated animate__faster animate__slideInLeft` } >
-          <IonCol size="12" >
-            <a href={`/message/${message.id}`}>
-                <IonCardTitle>{message.message.substring(0,100)}</IonCardTitle>
-            </a>
-          </IonCol>
-        </IonRow>
+    <div className="relative bg-white p-6 rounded-xl">
+      <Link to={`/message/${message.id}`} >
+          <p className="text-lg text-gray-600">{stringBefore}<b className="text-cb">{word}</b>{stringAfter.length>1? stringAfter+"....":stringAfter}</p>
+          <span className="absolute bg-green-500 w-8 h-8 flex items-center justify-center font-bold text-green-50 rounded-full -top-2 -left-2">{idx}</span>
+          <div className="absolute top-0 right-0 flex space-x-2 p-4">
+          </div>
+      </Link>
+    </div>
 
+
+    // <div className={`flex items-center gap-4 p-4 ${idx%2?'bg-cbmd hover:bg-cb':'bg-cbgld hover:bg-cb'}`}>
+    //     <div className="flex flex-col">
+    //     <a href={`/message/${message.id}`}>
+    //       <strong className="text-white text-sm font-medium">{message.message.substring(0,100)}</strong>
+    //     </a>
+    //     </div>
+    // </div>
+    
+    
+          
 
 
 

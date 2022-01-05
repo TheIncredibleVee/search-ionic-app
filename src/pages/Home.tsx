@@ -1,73 +1,70 @@
-import MessageListItem from '../components/MessageListItem';
 import Loader from '../components/Loader';
 import Display from '../components/Display';
-import { useState, useEffect } from 'react';
-import { Message, getMessages } from '../data/messages';
+import { useState, useEffect, useContext } from 'react';
+import { Message} from '../data/messages';
 import {
   IonContent,
-  IonHeader,
   IonPage,
   IonRefresher,
   IonRefresherContent,
-  IonTitle,
-  IonToolbar,
-  useIonViewWillEnter,
   IonSearchbar,
   IonButton,
-  IonRow,
-  IonCol,
-  IonGrid,
-  IonLabel,
-  IonCard,
-  IonListHeader,
-  IonCardHeader,
-  IonCardSubtitle,
-  IonCardTitle,
-  IonIcon,
-  IonInput,
 } from '@ionic/react';
 import './Home.css';
-import { Doughnut , Chart} from 'react-chartjs-2';
-import {
-  Chart as ChartJS,
-  LinearScale,
-  CategoryScale,
-  BarElement,
-  PointElement,
-  LineElement,
-  Legend,
-  Tooltip,
-  ArcElement,
-  registerables
-} from 'chart.js';
 import faker from 'faker';
-import {  chevronForward } from 'ionicons/icons';
-import { setTimeout } from 'timers';
-
-ChartJS.register(...registerables);
-
-
-ChartJS.register(
-  ArcElement,
-  LinearScale,
-  CategoryScale,
-  BarElement,
-  PointElement,
-  LineElement,
-  Legend,
-  Tooltip
-);
-
+import { setTimeout} from 'timers';
+import {MessageContext} from '../context/context';
+import MobileDisplay from '../components/MobileDisplay';
 
 
 const Home: React.FC = () => {
+    
+  const {messages, setMessages, setWord} = useContext(MessageContext);
 
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [total, setTtotal] = useState(0);
 
-  useIonViewWillEnter(() => {
-    const msgs = getMessages();
-    setMessages(msgs);
-  });
+  const[showHelp, setShowHelp] = useState(true);
+  const [width,setWidth]= useState(window.innerWidth);
+  window.onresize = () => {
+    setWidth(window.innerWidth);
+  };
+  function re(){
+    setWidth(window.innerWidth);
+  }
+  const [searchText, setSearchText] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [foundResults, setFoundResults] = useState(true);
+  const [error, setError] = useState("");
+  const generateLabels =()=>{
+    let date = new Date();
+    var dates = [];
+    var labels =[];
+    labels.push(date.toISOString().split('T')[0]);
+    dates.push(date);
+    for(let i = 0; i < 9; i++){
+      let nextDay:Date = new Date(dates[i]);
+      nextDay.setDate(dates[i].getDate()-1);
+      dates.push(nextDay);
+      labels.push(nextDay.toISOString().split('T')[0]);
+    }
+    return labels.reverse();
+  }
+  const dispLabels =()=>{
+    let date = new Date();
+    var dates = [];
+    var labels =[];
+    labels.push(date.toDateString().split(' ').slice(1).join(' '));
+    dates.push(date);
+    for(let i = 0; i < 9; i++){
+      let nextDay:Date = new Date(dates[i]);
+      nextDay.setDate(dates[i].getDate()-1);
+      dates.push(nextDay);
+      labels.push(nextDay.toDateString().split(' ').slice(1).join(' '));
+    }
+    return labels.reverse();
+  }
+  const labels=generateLabels();
+  // const [messages, setMessages] = useState<Message[]>([]);
 
   const refresh = (e: CustomEvent) => {
     setTimeout(() => {
@@ -76,7 +73,6 @@ const Home: React.FC = () => {
   };
 
   
-  const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
   const [doughnutData, setDoughnutData] = useState({
     labels: labels,
     datasets: [
@@ -105,7 +101,7 @@ const Home: React.FC = () => {
   });
 
   const [chartData, setChartData] = useState({
-    labels,
+    labels: dispLabels(),
     datasets: [
       {
         type: 'line' as const,
@@ -126,64 +122,39 @@ const Home: React.FC = () => {
     ],
   });
 
-  // const data = {
-  //   labels: labels,
-  //   datasets: [
-  //     {
-  //       label: '# of Votes',
-  //       data: [12, 19, 3, 5, 2, 3],
-  //       backgroundColor: [
-  //         'rgba(255, 99, 132, 0.8)',
-  //         'rgba(54, 162, 235, 0.8)',
-  //         'rgba(255, 206, 86, 0.8)',
-  //         'rgba(75, 192, 192, 0.8)',
-  //         'rgba(153, 102, 255, 0.8)',
-  //         'rgba(255, 159, 64, 0.8)',
-  //       ],
-  //       borderColor: [
-  //         'rgba(255, 99, 132, 1)',
-  //         'rgba(54, 162, 235, 1)',
-  //         'rgba(255, 206, 86, 1)',
-  //         'rgba(75, 192, 192, 1)',
-  //         'rgba(153, 102, 255, 1)',
-  //         'rgba(255, 159, 64, 1)',
-  //       ],
-  //       borderWidth: 2,
-  //     },
-  //   ],
-  // };
-
   
   const smaple = {
     "word": "google.com",
     "messages": [
         "Google.com is an amazing search engine",
-        "Hi. I am Arya and I like google.com"
+        "the best serach engine is google.com",
+        "After typing in the commands to www.google.com LaTeX (which are the instructions preceded by the backslash character) and the text of a sample paper, save them in a file with a name ending in .tex, like paper.tex. You can then type latex paper.tex and the typesetting program will run on your file of commands, producing a file ending in .dvi, which is the file that can be sent to a laserprinter (like valkyr, in Margaret Jacks Hall). (If there are any errors in your file of commands, you will be given a message which is usually impossible to interpret. Typical errors involve forgetting the right number of closing brackets or delimiters like & in example sentences. When LaTeX gives an error message and then asks what to do, possible options are to type x to quit and try to find the error in the emacs file, or press <RETURN> to try to continue and find the error by looking at the output document.) To print the file, you type lpr -Pvalkyr paper.dvi and see what you get. The easiest way to print a file of default sized pages two-up on a sheet sideways is with the command print -2 -Pprinter paper.dvi.You can't look at the .dvi file unless you have a workstation with graphics, rather than just a terminal. Any workstation that runs X-windows can be used to preview these files. You should get access to workstations (e.g. at Sweet Hall), otherwise you will waste a lot of paper and printer time while you learn how to typeset your papers.The output of the command file above should look like this:",
+        "One important thing to note about drawing trees with the tree-dvips package is that the lines are drawn by postscript commands, and so you can't see them unless you have a recent version of xdvi or make a postscript file and print that out, or preview a postscript document on a workstation with the program ghostview (look it up in the man pages). To make a postscript file, type dvips -o output.ps input.dvi where input.dvi is the .dvi file you created with LaTeX and the output file is the postscript file name. Then you can do www.google.com lpr -Pvalkyr output.ps or ghostview output.ps on a workstation.",
     ],
     "totalCount": 50,
     "ten_day_count": [
         {
-            "count": 1,
+            "count": 10,
             "date": "2022-01-02"
         },
         {
-            "count": 7,
-            "date": "2022-01-03"
+            "count": 50,
+            "date": "2022-01-01"
         },
         {
-          "count": 2,
-          "date": "2022-01-04"
+          "count": 3,
+          "date": "2021-12-28"
       },
       {
-        "count": 9,
+        "count": 0,
         "date": "2022-01-05"
       },
       {
-          "count": 11,
+          "count": 0,
           "date": "2022-01-06"
       },
       {
-        "count": 3,
+        "count": 0,
         "date": "2022-01-07"
       },
       {
@@ -202,6 +173,7 @@ const Home: React.FC = () => {
         //   method: 'GET',
         // });
         setTtotal(smaple.totalCount);
+        
         setDoughnutData({...doughnutData,
           labels: smaple.ten_day_count.map(x => x.date),
           datasets: [
@@ -229,8 +201,18 @@ const Home: React.FC = () => {
           ],
 
         });
+
+
+
+        var datasetForChart = Array.from({length: 10},()=>0)
+        for(let i = 0; i < smaple.ten_day_count.length; i++){
+            var labels = [];
+            labels= generateLabels();
+            var idx= labels.findIndex((val)=> val=== smaple.ten_day_count[i].date);
+            datasetForChart[idx]=smaple.ten_day_count[i].count;
+        }
         setChartData({...chartData,
-          labels: smaple.ten_day_count.map(x => x.date),
+          labels: dispLabels(),
           datasets: [
             {
               type: 'line' as const,
@@ -238,13 +220,13 @@ const Home: React.FC = () => {
               borderColor: 'rgb(255, 99, 132)',
               borderWidth: 2,
               fill: false,
-              data: smaple.ten_day_count.map(x => x.count),
+              data: datasetForChart,
             },
             {
               type: 'bar' as const,
               label: 'Bar Graph',
               backgroundColor: 'rgb(75, 192, 192)',
-              data: smaple.ten_day_count.map(x => x.count),
+              data: datasetForChart,
               borderColor: 'white',
               borderWidth: 2,
             }
@@ -256,205 +238,95 @@ const Home: React.FC = () => {
             id: idx,
           };
         });
-        messages.length = smaple.messages.length;
         console.log(messages);
         setShowHelp(false);
-        setTimeout(() => {setFoundResults(true);}, 3000);
+        if(searchText!=='google.com')
+          throw 'Wrong Call';
+        setTimeout(() => {setFoundResults(true);}, 2000);
+        let tempMsg:Message[]= [];
+        smaple.messages.forEach((msg,idx)=> {
+          let msgg:Message={
+            message: msg,
+            id: idx,
+          }
+          tempMsg.push(msgg);
+        });
+        setWord(smaple.word);
+        setMessages(tempMsg);
       }catch(e){
+
+        setError(String(e));
         setFoundResults(false);
-        console.error(e);
       }
     }
-
-  const [total, setTtotal] = useState(0);
-
-  const[showHelp, setShowHelp] = useState(true);
-  const [width,setWidth]= useState(window.innerWidth);
-  window.onresize = () => {
-    setWidth(window.innerWidth);
-  };
-  const [searchText, setSearchText] = useState('');
-  console.log(searchText);
-  const [showDoughnut, setShowDoughnut] = useState(true);
-  const [showBar, setShowBar] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
-  const [foundResults, setFoundResults] = useState(true);
+  useEffect(()=>{
+    console.log("INside useEffect");
+    console.log(error);
+  },[error]);
   useEffect(() => {
-    if(!showBar && !showDoughnut){
-      setWidth(100);
-    }else{
-      setWidth(window.innerWidth);
-    }
-  }, [showBar, showDoughnut]);
+    console.log(error);
+    console.log({messages});
+    window.addEventListener('resize', re);
+    return () => window.removeEventListener('resize', re);
+  },[]);
+
   return (
 
 
-    <IonPage id="home-page" className="bg-gradient-to-r from-cyan-500 to-blue-500">
+    <IonPage id="home-page" >
       <IonContent fullscreen>
         <IonRefresher slot="fixed" onIonRefresh={refresh}>
           <IonRefresherContent></IonRefresherContent>
         </IonRefresher>
 
-          <div className="min-h-screen bg-gradient-to-b from-cbl to-cp flex justify-center items-center p-4">
-            <div className="container rounded-lg pt-3 pb-14 pr-3 pl-3">
-              <form>
-                {(!foundResults || isLoading) && (<><h1 className="text-center font-bold text-white text-4xl">{isLoading?<p>Searching for <b className="text-cb">{searchText}</b></p>:'Search for a word'}</h1  >
-                  <p className="mx-auto font-normal text-center text-sm my-6 max-w-lg">This app will last 10 days count and last 100 messages.</p></>)}
-                  <div className="xs:flex items-center bg-cbgd rounded-lg overflow-hidden px-2 py-1 justify-between">
-                    <IonSearchbar className="xs-flex text-base text-gray-400 flex-grow outline-none px-2 " type="text" value={searchText} onIonChange={e => setSearchText(e.detail.value!)} animated placeholder="Add text to search"/>
-                    <div className="xs:flex items-center px-2 rounded-lg space-x-4 mx-auto ">
-                      <IonButton className=" text-white text-base rounded-lg font-thin" onClick={onClick} animate-bounce>Search</IonButton>
+          <div className="min-h-screen bg-gradient-to-b from-tp to-tg flex justify-center items-center p-4 pt-2">
+              <div className={` ${width<=640 ? "w-full":"container"} bg-satin-3 rounded-lg pt-3 pb-6 pr-3 pl-3 max-h-screen xl:pb-3 2xl:pb-2 lg:pb-4`}>
+                <form>
+                  {(!foundResults || isLoading) && (<><h1 className="text-center font-bold text-white text-4xl">{isLoading?<p>Searching for <b className="text-cb">{searchText}</b></p>:'Search for a word'}</h1  >
+                    <p className="mx-auto font-normal text-center text-sm my-6 max-w-lg">This app will last 10 days count and last 100 messages.</p></>)}
+                    <div className="xs:flex items-center bg-cbgd rounded-lg overflow-hidden px-2 py-1 justify-between">
+                      <IonSearchbar className="xs-flex text-base text-gray-400 flex-grow outline-none px-2 " type="text" value={searchText} onIonChange={e => {setSearchText(e.detail.value!)}} animated placeholder="Add text to search"/>
+                      <div className="xs:flex items-center px-2 rounded-lg space-x-4 mx-auto ">
+                        <IonButton className=" text-white text-base rounded-lg font-thin" onClick={onClick} animate-bounce disabled={searchText===''}>Search</IonButton>
+                      </div>
                     </div>
-                  </div>
-              </form>
-              {isLoading && (<div className="pt-10 flex justify-center items-center">
-                <Loader></Loader>
-              </div>)}
-              {!isLoading && foundResults && width>1280 && (
-                <Display chartData={chartData} doughnutData={doughnutData} height={60} messages={messages}></Display>
-              )}
-              {!isLoading && foundResults && width<=1280 && width>1024 && (
-                <Display chartData={chartData} doughnutData={doughnutData} height={100} messages={messages}></Display>
-              
-              )}
-              {!isLoading && foundResults && width<=1024 && (
-                <Display chartData={chartData} doughnutData={doughnutData} height={120} messages={messages}></Display>
-              
-              )}
-            </div>
+                </form>
+                {isLoading && (<div className="pt-10 flex justify-center items-center">
+                  <Loader></Loader>
+                </div>)}
+                {!isLoading && foundResults && width>1536 && (
+                  <Display chartData={chartData} doughnutData={doughnutData} position='bottom' height={60} total={total} totalCountHeight={18}></Display>
+                )}
+                {!isLoading && foundResults && width<=1536 && width>1280 && (
+                  <Display chartData={chartData} doughnutData={doughnutData} position='bottom' height={95} total={total} totalCountHeight={22}></Display>
+                )}
+                {!isLoading && foundResults && width<=1280 && width>1024 && (
+                  <Display chartData={chartData} doughnutData={doughnutData} position='bottom' height={120} total={total} totalCountHeight={25}></Display>
+                
+                )}
+                {!isLoading && foundResults && width<=1024 && width>768 && (
+                  <Display chartData={chartData} doughnutData={doughnutData} position='bottom' height={175} total={total} totalCountHeight={28}></Display>
+                
+                )}
+                {!isLoading && foundResults && width<=768 && width>640 && (
+                  <Display chartData={chartData} doughnutData={doughnutData} position='bottom' height={225} total={total} totalCountHeight={35}></Display>
+                
+                )}
+                {!isLoading && foundResults && width<=640  && (
+                  <MobileDisplay chartData={chartData} doughnutData={doughnutData} position='right' height={250} total={total} totalCountHeight={30}></MobileDisplay>
+                )}
+                {!isLoading && !foundResults && error!==''  && (
+                  <div className="relative mt-6 bg-white p-6 rounded-xl">
+                      <p className="text-lg text-gray-600">{error}</p>
+                      <span className="absolute bg-red-500 w-8 h-8 flex items-center justify-center font-bold text-green-50 rounded-full -top-2 -left-2">!</span>
+                      <div className="absolute top-0 right-0 flex space-x-2 p-4">
+                      </div>
+                </div>
+                )}
+
+              </div>
           </div>
 
-
-          {/* <IonGrid>
-          <IonRow>
-            <IonCol size="8" className="h-30vh">
-              <IonRow>
-                <IonCol size="6">
-                  <IonButton color="primary" expand="block" onClick={ (e)=>setShowDoughnut(!showDoughnut) }>
-                    Toggle Chart 1&nbsp;<IonIcon icon={ chevronForward } />
-                  </IonButton>
-                </IonCol>
-                <IonCol size="6">
-                  <IonButton color="primary" expand="block" onClick={ (e)=>setShowBar(!showBar) }>
-                    Toggle Chart 2&nbsp;<IonIcon icon={ chevronForward } />
-                  </IonButton>
-                </IonCol>
-              </IonRow> 
-            </IonCol>
-            <IonCol size-xl="8" size-lg="7" size-md="6" size-sm="6" size-xs="12">
-              <IonContent>
-                
-              
-                {messages.map(m => <MessageListItem key={m.id} message={m} />)}
-              </IonContent>
-            </IonCol>
-            
-          </IonRow>
-        </IonGrid> */}
-
-
-
-
-
-            {/* <IonCol size-xl="11" size-lg="11" size-md="10" size-sm="9" size-xs="9" >
-              <IonSearchbar value={searchText} onIonChange={e => setSearchText(e.detail.value!)} animated placeholder="Add text to search"></IonSearchbar>
-            </IonCol>
-            <IonCol size-xl="1"  size-lg="1" size-md="2"  size-sm="3" size-xs="3" className="ion-align-self-center" style={{height: 'fit-content'}}>
-            <IonButton size="default" onClick={onClick}>  
-              Submit
-            </IonButton>
-            </IonCol> */}
-          
-            {width>576 && !showHelp?(
-            <IonGrid fixed style={{height: '100vh'}}>
-              <IonRow>
-               
-                <IonCol size-xl="4" size-lg="5" size-md="6" size-sm="6" size-xs="12">
-                  {showDoughnut&& (
-                    <IonCard>
-                        <Doughnut data={doughnutData} />
-                    </IonCard>
-                  )}
-                  {
-                    showBar&&
-                    (
-                    <IonCard>
-                      <Chart type='bar' data={chartData} />
-                    </IonCard> 
-                    )
-                  }
-                  <IonRow>
-                    <IonCol size="6">
-                      <IonButton color="primary" expand="block" onClick={ (e)=>setShowDoughnut(!showDoughnut) }>
-                        Toggle Chart 1&nbsp;<IonIcon icon={ chevronForward } />
-                      </IonButton>
-                    </IonCol>
-                    <IonCol size="6">
-                      <IonButton color="primary" expand="block" onClick={ (e)=>setShowBar(!showBar) }>
-                        Toggle Chart 2&nbsp;<IonIcon icon={ chevronForward } />
-                      </IonButton>
-                    </IonCol>
-                  </IonRow> 
-                </IonCol>
-                <IonCol size-xl="8" size-lg="7" size-md="6" size-sm="6" size-xs="12">
-                  <IonContent>
-                    
-                  
-                    {messages.map(m => <MessageListItem key={m.id} message={m} />)}
-                  </IonContent>
-                </IonCol>
-                
-              </IonRow>
-            </IonGrid>)
-            :!showHelp &&(
-              <IonGrid>
-              <IonRow>
-               
-                <IonCol >
-                {showDoughnut&& (
-                    <IonCard>
-                        <Doughnut data={doughnutData} />
-                    </IonCard>
-                  )}
-                  {
-                    showBar&&(
-                    <IonCard>
-                      <Chart type='bar' data={chartData} />
-                    </IonCard> 
-                    )
-                  }
-                  <IonRow>
-                    <IonCol size="6">
-                      <IonButton color="primary" expand="block" onClick={ (e)=>setShowDoughnut(!showDoughnut) }>
-                        Toggle Chart 1&nbsp;<IonIcon icon={ chevronForward } />
-                      </IonButton>
-                    </IonCol>
-                    <IonCol size="6">
-                      <IonButton color="primary" expand="block" onClick={ (e)=>setShowBar(!showBar) }>
-                        Toggle Chart 2&nbsp;<IonIcon icon={ chevronForward } />
-                      </IonButton>
-                    </IonCol>
-                  </IonRow>  
-                </IonCol>
-                </IonRow>
-                <IonRow>
-                <IonCol >
-
-                <IonCard>
-
-                <IonCardHeader>
-                  <IonCardSubtitle>Total Count</IonCardSubtitle>
-                  <IonCardTitle>{total}</IonCardTitle>
-                </IonCardHeader>
-                  </IonCard>
-
-                    {messages.map(m => <MessageListItem key={m.id} message={m} />)}
-                  
-                </IonCol>
-                
-              </IonRow>
-            </IonGrid>
-            )}     
       </IonContent>
     </IonPage>
   );
