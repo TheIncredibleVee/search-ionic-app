@@ -34,7 +34,7 @@ function ViewMessage() {
       <IonHeader translucent>
         <IonToolbar>
           <IonButtons slot="start">
-            <IonBackButton text="Inbox" defaultHref="/home"></IonBackButton>
+            <IonBackButton text="Back" defaultHref="/home"></IonBackButton>
           </IonButtons>
         </IonToolbar>
       </IonHeader>
@@ -43,7 +43,7 @@ function ViewMessage() {
         {message ? (
           <>
 
-            <div className="ion-padding">
+            <div className="ion-padding font-sans">
               <h1>Message</h1>
               <p>{msgArr?.map( (w, idx) =>{
                 return <span key={idx}>{w}<b className="text-cb">{word}</b></span>

@@ -33,7 +33,7 @@ const Home: React.FC = () => {
   }
   const [searchText, setSearchText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [foundResults, setFoundResults] = useState(true);
+  const [foundResults, setFoundResults] = useState(false);
   const [error, setError] = useState("");
   const generateLabels =()=>{
     let date = new Date();
@@ -279,8 +279,8 @@ const Home: React.FC = () => {
           <IonRefresherContent></IonRefresherContent>
         </IonRefresher>
 
-          <div className="min-h-screen bg-gradient-to-b from-tp to-tg flex justify-center items-center p-4 pt-2">
-              <div className={` ${width<=640 ? "w-full":"container"} bg-satin-3 rounded-lg pt-3 pb-6 pr-3 pl-3 max-h-screen xl:pb-3 2xl:pb-2 lg:pb-4`}>
+          <div className="min-h-screen font-sans  bg-gradient-to-b from-tp to-tg flex justify-center items-center p-4 pt-2">
+              <div className={` ${width<=640 ? "w-full":"container"} bg-satin-3 rounded-lg pt-3 pb-6 pr-3 pl-3 h-fit xl:pb-3 2xl:pb-2 lg:pb-4`}>
                 <form>
                   {(!foundResults || isLoading) && (<><h1 className="text-center font-bold text-white text-4xl">{isLoading?<p>Searching for <b className="text-cb">{searchText}</b></p>:'Search for a word'}</h1  >
                     <p className="mx-auto font-normal text-center text-sm my-6 max-w-lg">This app will last 10 days count and last 100 messages.</p></>)}
@@ -295,17 +295,17 @@ const Home: React.FC = () => {
                   <Loader></Loader>
                 </div>)}
                 {!isLoading && foundResults && width>1536 && (
-                  <Display chartData={chartData} doughnutData={doughnutData} position='bottom' height={60} total={total} totalCountHeight={18}></Display>
+                  <Display chartData={chartData} doughnutData={doughnutData} position='bottom' height={65} total={total} totalCountHeight={18}></Display>
                 )}
                 {!isLoading && foundResults && width<=1536 && width>1280 && (
-                  <Display chartData={chartData} doughnutData={doughnutData} position='bottom' height={95} total={total} totalCountHeight={22}></Display>
+                  <Display chartData={chartData} doughnutData={doughnutData} position='bottom' height={75} total={total} totalCountHeight={22}></Display>
                 )}
                 {!isLoading && foundResults && width<=1280 && width>1024 && (
-                  <Display chartData={chartData} doughnutData={doughnutData} position='bottom' height={120} total={total} totalCountHeight={25}></Display>
+                  <Display chartData={chartData} doughnutData={doughnutData} position='bottom' height={100} total={total} totalCountHeight={25}></Display>
                 
                 )}
                 {!isLoading && foundResults && width<=1024 && width>768 && (
-                  <Display chartData={chartData} doughnutData={doughnutData} position='bottom' height={175} total={total} totalCountHeight={28}></Display>
+                  <Display chartData={chartData} doughnutData={doughnutData} position='bottom' height={100} total={total} totalCountHeight={28}></Display>
                 
                 )}
                 {!isLoading && foundResults && width<=768 && width>640 && (
@@ -313,7 +313,7 @@ const Home: React.FC = () => {
                 
                 )}
                 {!isLoading && foundResults && width<=640  && (
-                  <MobileDisplay chartData={chartData} doughnutData={doughnutData} position='right' height={250} total={total} totalCountHeight={30}></MobileDisplay>
+                  <MobileDisplay chartData={chartData} doughnutData={doughnutData} position='right' height={275} total={total} totalCountHeight={30}></MobileDisplay>
                 )}
                 {!isLoading && !foundResults && error!==''  && (
                   <div className="relative mt-6 bg-red-100 p-6 rounded-xl">

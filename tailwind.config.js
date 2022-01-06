@@ -1,11 +1,23 @@
 const defaultTheme = require('tailwindcss/defaultTheme')
 
+const fontFamily = defaultTheme.fontFamily;
+fontFamily['sans'] = [
+  'Montserrat', // <-- Roboto is a default sans font now
+  'Poppins',
+];
+fontFamily['serif'] = [
+  'Montserrat', // <-- Roboto is a default sans font now
+  'Poppins',
+];
+
+
 module.exports = {
   purge: [
     "./src/**/*.{js,jsx,ts,tsx}", "./public/index.html"
   ],
   darkMode: 'class', // or 'media' or 'class'
   theme: {
+    fontFamily: fontFamily,
     screens: {
       'xs': '360px',
       ...defaultTheme.screens,
