@@ -17,6 +17,7 @@ const MessageListItem: React.FC<MessageListItemProps> = ({ message, idx, word })
   let stringBefore;
   let stringAfter;
   stringBefore =msgArr.shift();
+  stringBefore= stringBefore.substring(stringBefore.length-100);
   stringAfter =" "+msgArr?.join(word).substring(0,(100-stringBefore.length));
   return (
     <div className="relative bg-white p-6 rounded-xl">
