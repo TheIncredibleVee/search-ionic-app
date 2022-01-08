@@ -6,4 +6,13 @@ An app to get data from api and display a couple of charts and also the messages
 
 Fully compatable with ios, android and web.
 
-search for google.com anything else won't work.
+#### Search for **google.com** anything else won't work.
+
+
+# Libraries/Frameworks Used
+
+1. Ionic-react
+2. Tailwind CSS
+3. Craco
+4. Chart.js
+5. React-chartjs-2
