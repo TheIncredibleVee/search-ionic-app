@@ -166,6 +166,7 @@ const Home: React.FC = () => {
 
 
     const onClick = async(e: any) => {
+      e.preventDefault();
       try{
         setIsLoading(true);
         setTimeout(() => {setIsLoading(false);}, 3000);
@@ -281,7 +282,7 @@ const Home: React.FC = () => {
 
           <div className="min-h-screen font-sans  bg-gradient-to-b from-tp to-tg flex justify-center items-center p-4 pt-2">
               <div className={` ${width<=640 ? "w-full":"container"} bg-satin-3 rounded-lg pt-3 pb-6 pr-3 pl-3 h-fit xl:pb-3 2xl:pb-2 lg:pb-4`}>
-                <form>
+                <form onSubmit={(e)=>onClick(e)}>
                   {(!foundResults || isLoading) && (<><h1 className="text-center font-bold text-white text-4xl">{isLoading?<p>Searching for <b className="text-cb">{searchText}</b></p>:'Search for a word'}</h1  >
                     <p className="mx-auto font-normal text-center text-sm my-6 max-w-lg">This app will last 10 days count and last 100 messages.</p></>)}
                     <div className="xs:flex items-center bg-cbgd rounded-lg overflow-hidden px-2 py-1 justify-between">
